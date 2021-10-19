@@ -1,0 +1,114 @@
+---
+title: "Data - Honours"
+author: "Seoyeon Park B00768397"
+date: "9/7/2021"
+output: html_document
+---
+
+```{r}
+#rm(list = ls())
+```
+
+# Setting up
+Load the Coccobase library, mgcv, and other required packages:
+```{r}
+library(coccobase)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(maps)
+library(viridis)
+library(kableExtra)
+library(stringr)
+library(gratia)
+library(mgcv)
+library(Metrics)
+```
+
+
+Needed data:
+```{r}
+head(environment_data)
+head(cocco)
+```
+
+Join environment data and cocco together
+lat/lon is the 1st/4th column in environment_data - switch names to "latitude" and "longitude" to use left_join()
+
+```{r}
+environment_data <- environment_data %>% dplyr::rename(latitude = lat, longitude = lon)
+
+cocco <- cocco %>% dplyr::select(month,longitude,latitude, cells_per_litre, scientific_name, depth) %>% mutate(longitude = round((longitude-0.5),digits = 0) + 0.5) %>% mutate(latitude = round((latitude-0.5), digits = 0) + 0.5) %>% filter(cells_per_litre > 0) 
+
+data <- left_join(cocco,environment_data, by = c("longitude","latitude","month"))
+data
+```  
+
+Refit the models with salinity >=30, depth <=50, replace silicate with silicate - nitrate (si_star), replace nitrate with nitrate - 16*phosphate (ni_star), Set longitude and latitude to North Atlantic (longitude from -50 to 0, latitude > 40)
+```{r}
+data <- data %>% filter(s_an >= 30) %>% filter(depth <=50) %>% mutate(ni_star = n_an - 16*p_an) %>% mutate(si_star = i_an - n_an) %>% subset(latitude >= 40 & longitude <= 0 & longitude >= -50)
+data
+```
+
+summarizing the number species filtered in NA
+
+```{r}
+data %>% count(scientific_name) %>% arrange(-n)
+```
+
+Final data should only include the following species:
+E.hux (n = 1367)
+Coccolithus pelagicus  (n = 572)
+Syracosphaera pulchra (n = 240)
+total coccolithophore species (n = 5823) - includes all Coccolithophore observations in NA
+Coccolithus species (n = 803) - includes Coccolithus pelagicus and Coccolithus spp. 
+Syracosphaera species (n = 790) - includes all species with family name Syracosphaera   
+
+
+```{r}
+library("stringr")
+```
+
+```{r}
+data.full <- data
+data.Ehux <- data %>% filter(scientific_name  == "Emiliania huxleyi")
+data.Coccolithus <- data[str_detect(data$scientific_name, "Coccolithus "), ]
+data.Cpel <- data %>% filter(scientific_name == "Coccolithus pelagicus")
+data.syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
+data.SPul <- data %>% filter(scientific_name == c("Syracosphaera pulchra"))
+```
+
+
+```{r}
+WorldData <- map_data("world") 
+map_colors <- RColorBrewer::brewer.pal(9,"Pastel1")
+```
+
+```{r}
+ggplot(data = data) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + theme(legend.position = "none") + ylim(30,90)  + xlim(-50,0)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
