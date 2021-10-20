@@ -1,0 +1,55 @@
+---
+title: "Visuals"
+author: "Seoyeon Park B00768397"
+date: "10/19/2021"
+output: html_document
+---
+ 
+Plot of abundance (original & log transformed):
+```{r}
+hist(data$cells_per_litre)
+hist(log(data$cells_per_litre))
+```
+
+Plots of each species:
+
+```{r}
+WorldData <- map_data("world") 
+map_colors <- RColorBrewer::brewer.pal(9,"Pastel1")
+```
+
+All coccolithophores:
+
+**may need to fullscreen this plot to see**
+```{r}
+ggplot(data = data) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + theme(legend.position = "right") + ylim(40,90)  + xlim(-50,0)
+```
+
+For distribution of Coccolithus genus:
+
+```{r}
+ggplot(data = data.Coccolithus) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + ylim(40,90)  + xlim(-50,0)
+```
+
+For distribution of Syracosphaera genus:
+
+```{r}
+ggplot(data = data.syracosphaera) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + ylim(40,90)  + xlim(-50,0)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

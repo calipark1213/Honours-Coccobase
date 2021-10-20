@@ -36,8 +36,6 @@ Join environment data and cocco together
 lat/lon is the 1st/4th column in environment_data - switch names to "latitude" and "longitude" to use left_join()
 
 ```{r}
-environment_data <- environment_data %>% dplyr::rename(latitude = lat, longitude = lon)
-
 cocco <- cocco %>% dplyr::select(month,longitude,latitude, cells_per_litre, scientific_name, depth) %>% mutate(longitude = round((longitude-0.5),digits = 0) + 0.5) %>% mutate(latitude = round((latitude-0.5), digits = 0) + 0.5) %>% filter(cells_per_litre > 0) 
 
 data <- left_join(cocco,environment_data, by = c("longitude","latitude","month"))
@@ -66,27 +64,14 @@ Syracosphaera species (n = 790) - includes all species with family name Syracosp
 
 
 ```{r}
-library("stringr")
-```
-
-```{r}
 data.full <- data
 data.Ehux <- data %>% filter(scientific_name  == "Emiliania huxleyi")
 data.Coccolithus <- data[str_detect(data$scientific_name, "Coccolithus "), ]
 data.Cpel <- data %>% filter(scientific_name == "Coccolithus pelagicus")
-data.syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
+data.Syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
 data.SPul <- data %>% filter(scientific_name == c("Syracosphaera pulchra"))
 ```
 
-
-```{r}
-WorldData <- map_data("world") 
-map_colors <- RColorBrewer::brewer.pal(9,"Pastel1")
-```
-
-```{r}
-ggplot(data = data) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + theme(legend.position = "none") + ylim(30,90)  + xlim(-50,0)
-```
 
 
 
