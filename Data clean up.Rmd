@@ -69,7 +69,7 @@ data.Ehux <- data %>% filter(scientific_name  == "Emiliania huxleyi")
 data.Coccolithus <- data[str_detect(data$scientific_name, "Coccolithus "), ]
 data.Cpel <- data %>% filter(scientific_name == "Coccolithus pelagicus")
 data.Syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
-data.SPul <- data %>% filter(scientific_name == c("Syracosphaera pulchra"))
+data.Spul <- data %>% filter(scientific_name == c("Syracosphaera pulchra"))
 ```
 
 
