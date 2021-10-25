@@ -36,7 +36,12 @@ Join environment data and cocco together
 lat/lon is the 1st/4th column in environment_data - switch names to "latitude" and "longitude" to use left_join()
 
 ```{r}
-cocco <- cocco %>% dplyr::select(month,longitude,latitude, cells_per_litre, scientific_name, depth) %>% mutate(longitude = round((longitude-0.5),digits = 0) + 0.5) %>% mutate(latitude = round((latitude-0.5), digits = 0) + 0.5) %>% filter(cells_per_litre > 0) 
+environment_data <- environment_data %>% dplyr::rename(latitude = lat, longitude = lon)
+```
+
+
+```{r}
+cocco <- cocco %>% dplyr::select(month,longitude,latitude, cells_per_litre, scientific_name, depth) %>% mutate(longitude = round((longitude-0.5),digits = 0) + 0.5) %>% mutate(latitude = round((latitude-0.5), digits = 0) + 0.5) %>% mutate(cells_per_litre = log(cells_per_litre)) %>% filter(cells_per_litre > 0) 
 
 data <- left_join(cocco,environment_data, by = c("longitude","latitude","month"))
 data
@@ -62,13 +67,27 @@ total coccolithophore species (n = 5823) - includes all Coccolithophore observat
 Coccolithus species (n = 803) - includes Coccolithus pelagicus and Coccolithus spp. 
 Syracosphaera species (n = 790) - includes all species with family name Syracosphaera   
 
+Summary of environmental variables
+
+```{r}
+data %>% select(c(p_an, ni_star, si_star, s_an, t_an)) %>% summary()
+```
+
+Scientific name must be unordered
+```{r}
+data <- transform(data, scientific_name= factor(scientific_name, ordered=FALSE))
+```
+
+```{r}
+library("stringr")
+```
 
 ```{r}
 data.full <- data
 data.Ehux <- data %>% filter(scientific_name  == "Emiliania huxleyi")
 data.Coccolithus <- data[str_detect(data$scientific_name, "Coccolithus "), ]
 data.Cpel <- data %>% filter(scientific_name == "Coccolithus pelagicus")
-data.Syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
+data.syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
 data.Spul <- data %>% filter(scientific_name == c("Syracosphaera pulchra"))
 ```
 
