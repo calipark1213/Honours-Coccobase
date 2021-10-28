@@ -23,6 +23,7 @@ library(stringr)
 library(gratia)
 library(mgcv)
 library(Metrics)
+library("stringr")
 ```
 
 
@@ -79,18 +80,17 @@ data <- transform(data, scientific_name= factor(scientific_name, ordered=FALSE))
 ```
 
 ```{r}
-library("stringr")
-```
-
-```{r}
 data.full <- data
 data.Ehux <- data %>% filter(scientific_name  == "Emiliania huxleyi")
 data.Coccolithus <- data[str_detect(data$scientific_name, "Coccolithus "), ]
 data.Cpel <- data %>% filter(scientific_name == "Coccolithus pelagicus")
-data.syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
+data.Syracosphaera <- data[str_detect(data$scientific_name, "Syracosphaera"), ]
 data.Spul <- data %>% filter(scientific_name == c("Syracosphaera pulchra"))
 ```
 
+```{r}
+save(data.full, data.Coccolithus, data.Cpel, data.Ehux, data.Spul, data.Syracosphaera, file = "data_subsets.RData")
+```
 
 
 
