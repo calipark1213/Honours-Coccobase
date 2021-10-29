@@ -1,0 +1,63 @@
+---
+title: "Coccolithus models"
+author: "Seoyeon Park B00768397"
+date: "10/28/2021"
+output: html_document
+---
+
+#Scientific name is only one factor level so gam returns an error - 
+`
+```{r}
+load("data_subsets.RData")
+```
+
+```{r}
+library(mgcv)
+```
+
+
+##MODEL G
+
+#Coccolithus_modG
+
+```{r}
+Coccolithus_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = data.Coccolithus)
+summary(Coccolithus_modG)
+```
+
+##MODEL GS - environmental variables + group smoother scientific_name
+
+#Coccolithus_modGS_p
+
+```{r}
+Coccolithus_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(p_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Coccolithus, method = "REML")
+summary(Coccolithus_modGS_p)
+```
+
+#Coccolithus_modGS_sistar
+
+```{r}
+Coccolithus_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(si_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Coccolithus, method = "REML")
+summary(Coccolithus_modGS_sistar)
+```
+
+#Coccolithus_modGS_nistar
+
+```{r}
+Coccolithus_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(ni_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Coccolithus, method = "REML")
+summary(Coccolithus_modGS_nistar)
+```
+
+#Coccolithus_modGS_s
+
+```{r}
+Coccolithus_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(s_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Coccolithus, method = "REML")
+summary(Coccolithus_modGS_s)
+```
+
+#Coccolithus_modGS_t
+
+```{r}
+Coccolithus_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(t_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Coccolithus, method = "REML")
+summary(Coccolithus_modGS_t)
+```

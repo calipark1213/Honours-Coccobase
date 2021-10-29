@@ -1,0 +1,65 @@
+---
+title: "Ehux models"
+author: "Seoyeon Park B00768397"
+date: "10/28/2021"
+output: html_document
+---
+
+#Scientific name is only one factor level so gam returns an error - need to remove s(scientific_name, bs = "re")
+`
+```{r}
+load("data_subsets.RData")
+```
+
+```{r}
+library(mgcv)
+```
+
+
+##MODEL G
+
+#Ehux_modG
+
+```{r}
+Ehux_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc","tp")) , data = data.Ehux)
+summary(Ehux_modG)
+```
+
+##MODEL GS - environmental variables + group smoother scientific_name
+
+#Ehux_modGS_p
+
+```{r}
+Ehux_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(p_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Ehux, method = "REML")
+summary(Ehux_modGS_p)
+```
+
+
+#Ehux_modGS_sistar
+
+```{r}
+Ehux_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(si_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Ehux, method = "REML")
+summary(Ehux_modGS_sistar)
+```
+
+#Ehux_modGS_nistar
+
+```{r}
+Ehux_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(ni_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Ehux, method = "REML")
+summary(Ehux_modGS_nistar)
+```
+
+#Ehux_modGS_s
+
+```{r}
+Ehux_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(s_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Ehux, method = "REML")
+summary(Ehux_modGS_s)
+```
+
+#Ehux_modGS_t
+
+```{r}
+Ehux_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(t_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Ehux, method = "REML")
+summary(Ehux_modGS_t)
+```
+

@@ -1,0 +1,67 @@
+---
+title: "Cpel models"
+author: "Seoyeon Park B00768397"
+date: "10/28/2021"
+output: html_document
+---
+
+Coccolithus pelagicus
+
+#Scientific name is only one factor level so gam returns an error - need to remove s(scientific_name, bs = "re")
+`
+```{r}
+load("data_subsets.RData")
+```
+
+```{r}
+library(mgcv)
+```
+
+
+##MODEL G
+
+#Cpel_modG
+
+```{r}
+Cpel_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc","tp")) , data = data.Cpel)
+summary(Cpel_modG)
+```
+
+##MODEL GS - environmental variables + group smoother scientific_name
+
+#Cpel_modGS_p
+
+```{r}
+Cpel_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(p_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Cpel, method = "REML")
+summary(Cpel_modGS_p)
+```
+
+
+#Cpel_modGS_sistar
+
+```{r}
+Cpel_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(si_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Cpel, method = "REML")
+summary(Cpel_modGS_sistar)
+```
+
+#Cpel_modGS_nistar
+
+```{r}
+Cpel_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(ni_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Cpel, method = "REML")
+summary(Cpel_modGS_nistar)
+```
+
+#Cpel_modGS_s
+
+```{r}
+Cpel_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(s_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Cpel, method = "REML")
+summary(Cpel_modGS_s)
+```
+
+#Cpel_modGS_t
+
+```{r}
+Cpel_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(t_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")), data = data.Cpel, method = "REML")
+summary(Cpel_modGS_t)
+```
+
