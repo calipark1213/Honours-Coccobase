@@ -2,7 +2,9 @@
 title: "Coccolithophore models"
 author: "Seoyeon Park B00768397"
 date: "10/24/2021"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r}
@@ -34,7 +36,7 @@ plot(full_modG, rug = T, residuals = T, shade = T, cex = 1, shade.col = "blue")
 #full_modGS_p
 
 ```{r}
-full_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(depth, bs = "tp") + s(p_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
+full_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, scientific_name, bs = "fs"), data = data.full, method = "REML")
 summary(full_modGS_p)
 ```
 
@@ -42,66 +44,28 @@ summary(full_modGS_p)
 #full_modGS_sistar
 
 ```{r}
-full_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(depth, bs = "tp") + s(si_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
+full_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = data.full, method = "REML")
 summary(full_modGS_sistar)
 ```
 
 #full_modGS_nistar
 
 ```{r}
-full_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(depth, bs = "tp") + s(ni_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
+full_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp")  + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, scientific_name, bs = "fs"), data = data.full, method = "REML")
 summary(full_modGS_nistar)
 ```
 
 #full_modGS_s
 
 ```{r}
-full_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(depth, bs = "tp") + s(s_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
+full_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, scientific_name, bs = "fs"), data = data.full, method = "REML")
 summary(full_modGS_s)
 ```
 
 #full_modGS_t
 
 ```{r}
-full_modGS_ <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(depth, bs = "tp") + s(t_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
+full_modGS_ <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs") , data = data.full, method = "REML")
 summary(full_modGS_s)
 ```
 
-
-##MODEL GI
-
-#full_modGI_p
-
-```{r}
-full_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "cc") + s(depth, bs = "tp") + s(p_an, by = scientific_name, bs = "tp", m=1) + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
-summary(s_modGI_p)
-```
-
-
-#full_modGI_sistar
-
-```{r}
-full_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "cc") + s(depth, bs = "tp") + s(si_star, by = scientific_name, bs = "tp", m=1) + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
-summary(full_modGI_sistar)
-```
-
-#full_modGI_nistar
-
-```{r}
-full_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "cc") + s(depth, bs = "tp") + s(ni_star, by = scientific_name, bs = "tp", m=1) + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
-summary(full_modGI_nistar)
-```
-
-#full_modGI_s
-
-```{r}
-full_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "cc") + s(depth, bs = "tp") + s(s_an, by = scientific_name, bs = "tp", m=1) + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
-summary(s_modGI_s)
-```
-
-#full_modGI_t
-
-```{r}
-full_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "cc") + s(depth, bs = "tp") + s(t_an, by = scientific_name, bs = "tp", m=1) + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re") + s(month, bs = "cc"), data = data.full, method = "REML")
-summary(s_modGI_t)
-```

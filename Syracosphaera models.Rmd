@@ -2,7 +2,9 @@
 title: "Syracosphaera models"
 author: "Seoyeon Park B00768397"
 date: "10/28/2021"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r}
@@ -28,34 +30,71 @@ summary(Syracosphaera_modG)
 #Syracosphaera_modGS_p
 
 ```{r}
-Syracosphaera_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(p_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Syracosphaera, method = "REML")
+Syracosphaera_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, scientific_name, bs = "fs") , data = data.Syracosphaera, method = "REML")
 summary(Syracosphaera_modGS_p)
 ```
 
 #Syracosphaera_modGS_sistar
 
 ```{r}
-Syracosphaera_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(si_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Syracosphaera, method = "REML")
+Syracosphaera_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = data.Syracosphaera, method = "REML")
 summary(Syracosphaera_modGS_sistar)
 ```
 
 #Syracosphaera_modGS_nistar
 
 ```{r}
-Syracosphaera_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(ni_star, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Syracosphaera, method = "REML")
+Syracosphaera_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, scientific_name, bs = "fs"), data = data.Syracosphaera, method = "REML")
 summary(Syracosphaera_modGS_nistar)
 ```
 
 #Syracosphaera_modGS_s
 
 ```{r}
-Syracosphaera_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(s_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Syracosphaera, method = "REML")
+Syracosphaera_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, scientific_name, bs = "fs"), data = data.Syracosphaera, method = "REML")
 summary(Syracosphaera_modGS_s)
 ```
 
 #Syracosphaera_modGS_t
 
 ```{r}
-Syracosphaera_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(t_an, scientific_name, bs = "fs") + te(longitude, latitude, bs = c("cc", "tp")) + s(scientific_name, bs = "re"), data = data.Syracosphaera, method = "REML")
+Syracosphaera_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = data.Syracosphaera, method = "REML")
 summary(Syracosphaera_modGS_t)
+```
+
+##MODEL GI - environmental variables + individual smoother scientific_name
+
+#Syracosphaera_modGI_p
+
+```{r}
+Syracosphaera_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, by = scientific_name, bs = "fs", m = 1) , data = data.Syracosphaera, method = "REML")
+summary(Syracosphaera_modGI_p)
+```
+
+#Syracosphaera_modGI_sistar
+
+```{r}
+Syracosphaera_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = data.Syracosphaera, method = "REML")
+summary(Syracosphaera_modGI_sistar)
+```
+
+#Syracosphaera_modGI_nistar
+
+```{r}
+Syracosphaera_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, by = scientific_name, bs = "fs",  m = 1), data = data.Syracosphaera, method = "REML")
+summary(Syracosphaera_modGI_nistar)
+```
+
+#Syracosphaera_modGI_s
+
+```{r}
+Syracosphaera_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by = scientific_name, bs = "fs", m = 1), data = data.Syracosphaera, method = "REML")
+summary(Syracosphaera_modGI_s)
+```
+
+#Syracosphaera_modGI_t
+
+```{r}
+Syracosphaera_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = data.Syracosphaera, method = "REML")
+summary(Syracosphaera_modGI_t)
 ```
