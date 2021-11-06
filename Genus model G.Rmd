@@ -1,0 +1,44 @@
+---
+title: "Genus model G"
+author: "Seoyeon Park B00768397"
+date: "10/24/2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r}
+load("data_subsets.RData")
+```
+
+```{r}
+library(mgcv)
+```
+
+##MODEL G
+
+#full_modG
+
+```{r}
+full_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re")  + te(longitude, latitude, bs = c("cc","tp")) , data = data.full)
+summary(full_modG)
+```
+
+```{r}
+plot(full_modG, rug = T, residuals = T, shade = T, cex = 1, shade.col = "blue")
+```
+
+#Coccolithus_modG
+
+```{r}
+Coccolithus_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = data.Coccolithus)
+summary(Coccolithus_modG)
+```
+
+#Syracosphaera_modG
+
+```{r}
+Syracosphaera_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = data.Syracosphaera)
+summary(Syracosphaera_modG)
+```
+
