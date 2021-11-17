@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r}
-#rm(list = ls())
+rm(list = ls())
 ```
 
 # Setting up
@@ -50,7 +50,7 @@ data
 
 Refit the models with salinity >=30, depth <=50, replace silicate with silicate - nitrate (si_star), replace nitrate with nitrate - 16*phosphate (ni_star), Set longitude and latitude to North Atlantic (longitude from -50 to 0, latitude > 40)
 ```{r}
-data <- data %>% filter(s_an >= 30) %>% filter(depth <=50) %>% mutate(ni_star = n_an - 16*p_an) %>% mutate(si_star = i_an - n_an) %>% subset(latitude >= 40 & longitude <= 0 & longitude >= -50)
+data <- data %>% filter(s_an >= 30) %>% filter(depth <=50) %>% mutate(ni_star = n_an - 16*p_an) %>% mutate(si_star = i_an - n_an) %>% subset(latitude >= 40 & longitude <= 0 & longitude >= -50) %>% mutate(cells_per_litre = log(cells_per_litre))
 data
 ```
 
@@ -76,7 +76,7 @@ data %>% select(c(p_an, ni_star, si_star, s_an, t_an)) %>% summary()
 
 Scientific name must be unordered
 ```{r}
-data <- transform(data, scientific_name= factor(scientific_name, ordered=FALSE))
+data <- transform(data, scientific_name= factor(scientific_name, ordered=FALSE)) 
 ```
 
 ```{r}

@@ -1,0 +1,111 @@
+---
+title: "cross validation data"
+author: "Seoyeon Park B00768397"
+date: "11/16/2021"
+output: html_document
+---
+
+```{r}
+rm(list = ls())
+```
+
+```{r}
+load("data_subsets.RData")
+```
+
+```{r}
+set.seed(101)
+```
+
+
+Training and Testing (60:40 split)
+
+Coccolithophore:
+
+```{r}
+n = nrow(data.full)
+split = sample(1:n, size = round(0.6*n), replace = F)
+train.full = data.full[split,]
+test.full = data.full[-split,]
+```
+
+Training data has 3493 observations
+Testing data has 2329 observations 
+Total of 5822 observations
+
+Coccolithus:
+
+```{r}
+n = nrow(data.Coccolithus)
+split = sample(1:n, size = round(0.6*n), replace = F)
+train.Coccolithus = data.Coccolithus[split,]
+test.Coccolithus = data.Coccolithus[-split,]
+```
+
+Training data has 482 observations
+Testing data has 321 observations
+Total of 803 observations 
+
+Syracosphaera:
+
+```{r}
+n = nrow(data.Syracosphaera)
+split = sample(1:n, size = round(0.6*n), replace = F)
+train.Syracosphaera = data.Syracosphaera[split,]
+test.Syracosphaera = data.Syracosphaera[-split,]
+```
+
+Training data has 474 observations
+Testing data has 316 observations
+Total of 790 observations
+
+Emiliania huxleyi:
+
+```{r}
+n = nrow(data.Ehux)
+split = sample(1:n, size = round(0.6*n), replace = F)
+train.Ehux = data.Ehux[split,]
+test.Ehux = data.Ehux[-split,]
+```
+
+Training data has 820 observations
+Testing data has 547 observations
+Total of 1367 observations
+
+Coccolithus pelagicus:
+
+```{r}
+n = nrow(data.Cpel)
+split = sample(1:n, size = round(0.6*n), replace = F)
+train.Cpel = data.Cpel[split,]
+test.Cpel = data.Cpel[-split,]
+```
+
+Training data has 343 observations
+Testing data has 229 observations
+Total of 572 observations
+
+Syracosphaera Pulchra:
+
+```{r}
+n = nrow(data.Spul)
+split = sample(1:n, size = round(0.6*n), replace = F)
+train.Spul = data.Spul[split,]
+test.Spul = data.Spul[-split,]
+```
+
+Training data has 144 observations
+Testing data has 96 observations
+Total of 240 observations
+
+
+```{r}
+save(train.full, test.full, train.Ehux, test.Ehux, train.Coccolithus, test.Coccolithus, train.Cpel, test.Cpel, train.Syracosphaera, test.Syracosphaera, train.Spul, test.Spul, file = "data_crossval.RData")
+```
+
+
+
+
+
+
+
