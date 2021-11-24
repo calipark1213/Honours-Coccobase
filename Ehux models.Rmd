@@ -15,6 +15,10 @@ load("data_subsets.RData")
 
 ```{r}
 library(mgcv)
+library(glmnet)
+library(stats)
+library(caret)
+set.seed(101)
 ```
 
 
@@ -27,6 +31,36 @@ Ehux_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + 
 summary(Ehux_modG)
 ```
 
+##train_ehux_modG
+
+```{r}
+train_ehux_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc","tp")) , data = train.Ehux)
+summary(train_ehux_modG)
+```
+
+```{r}
+plot(train_ehux_modG)
+```
+
+##test_ehux_modG
+
+```{r}
+test_ehux_modG <- train_ehux_modG %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modG)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modG <- test.Ehux$cells_per_litre - test_ehux_modG
+RMSE_ehux_modG <- sqrt(mean(error_ehux_modG^2))
+print(RMSE_ehux_modG)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modG/mean(test.Ehux$cells_per_litre)
+```
+
 ##MODEL GS - environmental variables + group smoother scientific_name
 
 #Ehux_modGS_p
@@ -36,12 +70,61 @@ Ehux_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp")
 summary(Ehux_modGS_p)
 ```
 
+##train_ehux_modGS_p
+```{r}
+train_ehux_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, scientific_name, bs = "fs"), data = train.Ehux, method = "REML")
+summary(train_ehux_modGS_p)
+```
+
+##test_ehux_modGS_p
+
+```{r}
+test_ehux_modGS_p <- train_ehux_modGS_p %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGS_p)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGS_p <- test.Ehux$cells_per_litre - test_ehux_modGS_p
+RMSE_ehux_modGS_p <- sqrt(mean(error_ehux_modGS_p^2))
+print(RMSE_ehux_modGS_p)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGS_p/mean(test.Ehux$cells_per_litre)
+```
 
 #Ehux_modGS_sistar
 
 ```{r}
 Ehux_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = data.Ehux, method = "REML")
 summary(Ehux_modGS_sistar)
+```
+
+##train_ehux_modGS_sistar
+```{r}
+train_ehux_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = train.Ehux, method = "REML")
+summary(train_ehux_modGS_sistar)
+```
+
+##test_ehux_modGS_sistar
+
+```{r}
+test_ehux_modGS_sistar <- train_ehux_modGS_sistar %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGS_sistar)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGS_sistar <- test.Ehux$cells_per_litre - test_ehux_modGS_sistar
+RMSE_ehux_modGS_sistar <- sqrt(mean(error_ehux_modGS_sistar^2))
+print(RMSE_ehux_modGS_sistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGS_sistar/mean(test.Ehux$cells_per_litre)
 ```
 
 #Ehux_modGS_nistar
@@ -51,6 +134,31 @@ Ehux_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = 
 summary(Ehux_modGS_nistar)
 ```
 
+##train_ehux_modGS_nistar
+```{r}
+train_ehux_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, scientific_name, bs = "fs"), data = train.Ehux, method = "REML")
+summary(train_ehux_modGS_nistar)
+```
+
+##test_ehux_modGS_nistar
+
+```{r}
+test_ehux_modGS_nistar <- train_ehux_modGS_nistar %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGS_nistar)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGS_nistar <- test.Ehux$cells_per_litre - test_ehux_modGS_nistar
+RMSE_ehux_modGS_nistar <- sqrt(mean(error_ehux_modGS_nistar^2))
+print(RMSE_ehux_modGS_nistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGS_nistar/mean(test.Ehux$cells_per_litre)
+```
+
 #Ehux_modGS_s
 
 ```{r}
@@ -58,11 +166,61 @@ Ehux_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp")
 summary(Ehux_modGS_s)
 ```
 
+##train_ehux_modGS_s
+```{r}
+train_ehux_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, scientific_name, bs = "fs"), data = train.Ehux, method = "REML")
+summary(train_ehux_modGS_s)
+```
+
+##test_ehux_modGS_s
+
+```{r}
+test_ehux_modGS_s <- train_ehux_modGS_s %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGS_s)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGS_s <- test.Ehux$cells_per_litre - test_ehux_modGS_s
+RMSE_ehux_modGS_s <- sqrt(mean(error_ehux_modGS_s^2))
+print(RMSE_ehux_modGS_s)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGS_s/mean(test.Ehux$cells_per_litre)
+```
+
 #Ehux_modGS_t
 
 ```{r}
 Ehux_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = data.Ehux, method = "REML")
 summary(Ehux_modGS_t)
+```
+
+##train_ehux_modGS_t
+```{r}
+train_ehux_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = train.Ehux, method = "REML")
+summary(train_ehux_modGS_t)
+```
+
+##test_ehux_modGS_t
+
+```{r}
+test_ehux_modGS_t <- train_ehux_modGS_t %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGS_t)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGS_t <- test.Ehux$cells_per_litre - test_ehux_modGS_t
+RMSE_ehux_modGS_t <- sqrt(mean(error_ehux_modGS_t^2))
+print(RMSE_ehux_modGS_t)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGS_t/mean(test.Ehux$cells_per_litre)
 ```
 
 ##MODEL GI - environmental variables + individual smoother scientific_name
@@ -74,12 +232,61 @@ Ehux_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp")
 summary(Ehux_modGS_p)
 ```
 
+###train_ehux_modGI_p
+```{r}
+train_ehux_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, by = scientific_name, bs = "fs", m = 1), data = train.Ehux, method = "REML")
+summary(train_ehux_modGI_p)
+```
+
+##test_ehux_modGI_p
+
+```{r}
+test_ehux_modGI_p <- train_ehux_modGI_p %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGI_p)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGI_p <- test.Ehux$cells_per_litre - test_ehux_modGI_p
+RMSE_ehux_modGI_p <- sqrt(mean(error_ehux_modGI_p^2))
+print(RMSE_ehux_modGI_p)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGI_p/mean(test.Ehux$cells_per_litre)
+```
 
 #Ehux_modGI_sistar
 
 ```{r}
 Ehux_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = data.Ehux, method = "REML")
 summary(Ehux_modGS_sistar)
+```
+
+###train_ehux_modGI_sistar
+```{r}
+train_ehux_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = train.Ehux, method = "REML")
+summary(train_ehux_modGI_sistar)
+```
+
+##test_ehux_modGI_sistar
+
+```{r}
+test_ehux_modGI_sistar <- train_ehux_modGI_sistar %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGI_sistar)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGI_sistar <- test.Ehux$cells_per_litre - test_ehux_modGI_sistar
+RMSE_ehux_modGI_sistar <- sqrt(mean(error_ehux_modGI_sistar^2))
+print(RMSE_ehux_modGI_sistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGI_sistar/mean(test.Ehux$cells_per_litre)
 ```
 
 #Ehux_modGI_nistar
@@ -89,11 +296,61 @@ Ehux_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = 
 summary(Ehux_modGI_nistar)
 ```
 
+###train_ehux_modGI_nistar
+```{r}
+train_ehux_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, by = scientific_name, bs = "fs", m = 1), data = train.Ehux, method = "REML")
+summary(train_ehux_modGI_nistar)
+```
+
+##test_ehux_modGI_nistar
+
+```{r}
+test_ehux_modGI_nistar <- train_ehux_modGI_nistar %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGI_nistar)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGI_nistar <- test.Ehux$cells_per_litre - test_ehux_modGI_nistar
+RMSE_ehux_modGI_nistar <- sqrt(mean(error_ehux_modGI_nistar^2))
+print(RMSE_ehux_modGI_nistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGI_nistar/mean(test.Ehux$cells_per_litre)
+```
+
 #Ehux_modGI_s
 
 ```{r}
 Ehux_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by =  scientific_name, bs = "fs", m = 1), data = data.Ehux, method = "REML")
 summary(Ehux_modGI_s)
+```
+
+###train_ehux_modGI_s
+```{r}
+train_ehux_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by = scientific_name, bs = "fs", m = 1), data = train.Ehux, method = "REML")
+summary(train_ehux_modGI_s)
+```
+
+##test_ehux_modGI_s
+
+```{r}
+test_ehux_modGI_s <- train_ehux_modGI_s %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGI_s)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGI_s <- test.Ehux$cells_per_litre - test_ehux_modGI_s
+RMSE_ehux_modGI_s <- sqrt(mean(error_ehux_modGI_s^2))
+print(RMSE_ehux_modGI_s)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGI_s/mean(test.Ehux$cells_per_litre)
 ```
 
 #Ehux_modGI_t
@@ -102,6 +359,47 @@ summary(Ehux_modGI_s)
 Ehux_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = data.Ehux, method = "REML")
 summary(Ehux_modGI_t)
 ```
+
+
+###train_ehux_modGI_t
+```{r}
+train_ehux_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = train.Ehux, method = "REML")
+summary(train_ehux_modGI_t)
+```
+
+##test_ehux_modGI_t
+
+```{r}
+test_ehux_modGI_t <- train_ehux_modGI_t %>% predict(test.Ehux, type = "response")
+summary(test_ehux_modGI_t)
+```
+
+RMSE of test data: 
+```{r}
+error_ehux_modGI_t <- test.Ehux$cells_per_litre - test_ehux_modGI_t
+RMSE_ehux_modGI_t <- sqrt(mean(error_ehux_modGI_t^2))
+print(RMSE_ehux_modGI_t)
+```
+
+prediction error rate:
+```{r}
+RMSE_ehux_modGI_t/mean(test.Ehux$cells_per_litre)
+```
+
+
+#AIC values
+```{r}
+AIC(train_ehux_modG, train_ehux_modGS_p, train_ehux_modGS_sistar, train_ehux_modGS_nistar, train_ehux_modGS_s, train_ehux_modGS_t, train_ehux_modGI_p, train_ehux_modGI_sistar, train_ehux_modGI_nistar, train_ehux_modGI_s, train_ehux_modGI_t)
+```
+
+
+
+
+
+
+
+
+
 
 
 

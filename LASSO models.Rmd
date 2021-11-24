@@ -1,0 +1,403 @@
+---
+title: "LASSO models"
+author: "Seoyeon Park B00768397"
+date: "11/24/2021"
+output: html_document
+---
+
+#LASSO model full
+ 
+Organize data into matrix:
+```{r}
+y <- data.full$cells_per_litre
+x <- data.matrix(data.full[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_full <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_full$lambda.min
+best_lambda
+plot(cv_model_full)
+```
+
+```{r}
+best_model_full <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_full)
+```
+
+No predictors completely shrunk to 0. 
+
+##train_lasso_full
+```{r}
+y <- train.full$cells_per_litre
+x <- data.matrix(train.full[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_train_full <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_train_full$lambda.min
+best_lambda
+plot(cv_model_train_full)
+```
+
+```{r}
+best_model_lasso_full <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_lasso_full)
+```
+
+salinity shrunk to 0 
+
+##test_lasso_full
+
+```{r}
+x <- data.matrix(test.full[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+test_lasso_full <- predict(best_model_lasso_full, newx = x, type = "response")
+```
+
+```{r}
+summary(test_lasso_full)
+```
+
+RMSE of test data: 
+```{r}
+error_lasso_full <- test.full$cells_per_litre - test_lasso_full
+RMSE_lasso_full <- sqrt(mean(error_lasso_full^2))
+print(RMSE_lasso_full)
+```
+
+prediction error rate:
+```{r}
+RMSE_lasso_full/mean(test.full$cells_per_litre)
+```
+
+#LASSO model coccolithus
+ 
+Organize data into matrix:
+```{r}
+y <- data.Coccolithus$cells_per_litre
+x <- data.matrix(data.Coccolithus[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_coccolithus <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_coccolithus$lambda.min
+best_lambda
+plot(cv_model_coccolithus)
+```
+
+```{r}
+best_model_coccolithus <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_coccolithus)
+```
+
+##train_lasso_coccolithus
+```{r}
+y <- train.Coccolithus$cells_per_litre
+x <- data.matrix(train.Coccolithus[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_train_coccolithus <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_train_coccolithus$lambda.min
+best_lambda
+plot(cv_model_train_coccolithus)
+```
+
+```{r}
+best_model_lasso_coccolithus <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_lasso_coccolithus)
+```
+
+salinity shrunk to 0
+
+##test_lasso_coccolithus
+
+```{r}
+x <- data.matrix(test.Coccolithus[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+test_lasso_coccolithus <- predict(best_model_lasso_coccolithus, newx = x, type = "response")
+```
+
+```{r}
+summary(test_lasso_coccolithus)
+```
+
+RMSE of test data: 
+```{r}
+error_lasso_coccolithus <- test.Coccolithus$cells_per_litre - test_lasso_coccolithus
+RMSE_lasso_coccolithus <- sqrt(mean(error_lasso_coccolithus^2))
+print(RMSE_lasso_coccolithus)
+```
+
+prediction error rate:
+```{r}
+RMSE_lasso_coccolithus/mean(test.full$cells_per_litre)
+```
+
+#LASSO model syracosphaera
+ 
+Organize data into matrix:
+```{r}
+y <- data.Syracosphaera$cells_per_litre
+x <- data.matrix(data.Syracosphaera[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_syracosphaera <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_syracosphaera$lambda.min
+best_lambda
+plot(cv_model_syracosphaera)
+```
+
+```{r}
+best_model_syracosphaera <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_syracosphaera)
+```
+
+None of the coefficients shrink to 0. 
+
+##train_lasso_syracosphaera
+```{r}
+y <- train.Syracosphaera$cells_per_litre
+x <- data.matrix(train.Syracosphaera[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_train_syracosphaera <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_train_syracosphaera$lambda.min
+best_lambda
+plot(cv_model_train_syracosphaera)
+```
+
+```{r}
+best_model_lasso_syracosphaera <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_lasso_syracosphaera)
+```
+
+##test_lasso_syracosphaera
+
+```{r}
+x <- data.matrix(test.Syracosphaera[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+test_lasso_syracosphaera <- predict(best_model_lasso_syracosphaera, newx = x, type = "response")
+```
+
+```{r}
+summary(test_lasso_syracosphaera)
+```
+
+RMSE of test data: 
+```{r}
+error_lasso_syracosphaera <- test.Syracosphaera$cells_per_litre - test_lasso_syracosphaera
+RMSE_lasso_syracosphaera <- sqrt(mean(error_lasso_syracosphaera^2))
+print(RMSE_lasso_syracosphaera)
+```
+
+prediction error rate:
+```{r}
+RMSE_lasso_syracosphaera/mean(test.full$cells_per_litre)
+```
+
+
+=============================================================================================================================
+
+#LASSO model Ehux
+ 
+Organize data into matrix:
+```{r}
+y <- data.Ehux$cells_per_litre
+x <- data.matrix(data.Ehux[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_Ehux <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_Ehux$lambda.min
+best_lambda
+plot(cv_model_Ehux)
+```
+
+```{r}
+best_model_Ehux <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_Ehux)
+```
+
+##train_lasso_Ehux
+```{r}
+y <- train.Ehux$cells_per_litre
+x <- data.matrix(train.Ehux[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_train_Ehux <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_train_Ehux$lambda.min
+best_lambda
+plot(cv_model_train_Ehux)
+```
+
+```{r}
+best_model_lasso_Ehux <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_lasso_Ehux)
+```
+
+salinity shrunk to 0 
+
+##test_lasso_Ehux
+
+```{r}
+x <- data.matrix(test.Ehux[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+test_lasso_Ehux <- predict(best_model_lasso_Ehux, newx = x, type = "response")
+```
+
+```{r}
+summary(test_lasso_Ehux)
+```
+
+RMSE of test data: 
+```{r}
+error_lasso_Ehux <- test.Ehux$cells_per_litre - test_lasso_Ehux
+RMSE_lasso_Ehux <- sqrt(mean(error_lasso_Ehux^2))
+print(RMSE_lasso_Ehux)
+```
+
+prediction error rate:
+```{r}
+RMSE_lasso_Ehux/mean(test.Ehux$cells_per_litre)
+```
+
+#LASSO model Cpel
+ 
+Organize data into matrix:
+```{r}
+y <- data.Cpel$cells_per_litre
+x <- data.matrix(data.Cpel[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_Cpel <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_Cpel$lambda.min
+best_lambda
+plot(cv_model_Cpel)
+```
+
+```{r}
+best_model_Cpel <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_Cpel)
+```
+
+##train_lasso_Cpel
+```{r}
+y <- train.Cpel$cells_per_litre
+x <- data.matrix(train.Cpel[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_train_Cpel <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_train_Cpel$lambda.min
+best_lambda
+plot(cv_model_train_Cpel)
+```
+
+```{r}
+best_model_lasso_Cpel <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_lasso_Cpel)
+```
+
+##test_lasso_Cpel
+
+```{r}
+x <- data.matrix(test.Cpel[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+test_lasso_Cpel <- predict(best_model_lasso_Cpel, newx = x, type = "response")
+```
+
+```{r}
+summary(test_lasso_Cpel)
+```
+
+RMSE of test data: 
+```{r}
+error_lasso_Cpel <- test.Cpel$cells_per_litre - test_lasso_Cpel
+RMSE_lasso_Cpel<- sqrt(mean(error_lasso_Cpel^2))
+print(RMSE_lasso_Cpel)
+```
+
+prediction error rate:
+```{r}
+RMSE_lasso_Cpel/mean(test.full$cells_per_litre)
+```
+
+#LASSO model Spul
+
+Organize data into matrix:
+```{r}
+y <- data.Spul$cells_per_litre
+x <- data.matrix(data.Spul[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_Spul <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_Spul$lambda.min
+best_lambda
+plot(cv_model_Spul)
+```
+
+```{r}
+best_model_Spul <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_Spul)
+```
+
+##train_lasso_Spul
+```{r}
+y <- train.Spul$cells_per_litre
+x <- data.matrix(train.Spul[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+cv_model_train_Spul<- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_model_train_Spul$lambda.min
+best_lambda
+plot(cv_model_train_Spul)
+```
+
+```{r}
+best_model_lasso_Spul <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model_lasso_Spul)
+```
+
+##test_lasso_Spul
+
+```{r}
+x <- data.matrix(test.Spul[, c("p_an", "si_star", "ni_star", "s_an", "t_an", "scientific_name", "longitude", "latitude")])
+```
+
+```{r}
+test_lasso_Spul <- predict(best_model_lasso_Spul, newx = x, type = "response")
+```
+
+```{r}
+summary(test_lasso_Spul)
+```
+
+RMSE of test data: 
+```{r}
+error_lasso_Spul <- test.Spul$cells_per_litre - test_lasso_Spul
+RMSE_lasso_Spul <- sqrt(mean(error_lasso_Spul^2))
+print(RMSE_lasso_Spul)
+```
+
+prediction error rate:
+```{r}
+RMSE_lasso_Spul/mean(test.full$cells_per_litre)
+```

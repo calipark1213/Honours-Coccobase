@@ -17,6 +17,10 @@ load("data_subsets.RData")
 
 ```{r}
 library(mgcv)
+library(glmnet)
+library(stats)
+library(caret)
+set.seed(101)
 ```
 
 
@@ -29,6 +33,34 @@ Spul_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + 
 summary(Spul_modG)
 ```
 
+###train_spul_modG
+
+```{r}
+train_spul_modG <-  gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc","tp")) , data = train.Spul)
+summary(train_spul_modG)
+```
+
+###test_spul_modG
+
+```{r}
+test_spul_modG <- train_spul_modG %>% predict(test.Spul, type = "response")
+summary(test_spul_modG)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modG <- test.Spul$cells_per_litre - test_spul_modG
+RMSE_spul_modG <- sqrt(mean(error_spul_modG^2))
+print(RMSE_spul_modG)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modG/mean(test.Spul$cells_per_litre)
+```
+
+Actual vs predicted: 
+
 ##MODEL GS - environmental variables + group smoother scientific_name
 
 #Spul_modGS_p
@@ -36,6 +68,31 @@ summary(Spul_modG)
 ```{r}
 Spul_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, scientific_name, bs = "fs"), data = data.Spul, method = "REML")
 summary(Spul_modGS_p)
+```
+
+##train_spul_modGS_p
+```{r}
+train_spul_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, scientific_name, bs = "fs"), data = train.Spul, method = "REML")
+summary(train_spul_modGS_p)
+```
+
+###test_spul_modGS_p
+
+```{r}
+test_spul_modGS_p <- train_spul_modGS_p %>% predict(test.Spul, type = "response")
+summary(test_spul_modGS_p)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGS_p <- test.Spul$cells_per_litre - test_spul_modGS_p
+RMSE_spul_modGS_p <- sqrt(mean(error_spul_modGS_p^2))
+print(RMSE_spul_modGS_p)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGS_p/mean(test.Spul$cells_per_litre)
 ```
 
 
@@ -46,11 +103,61 @@ Spul_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = 
 summary(Spul_modGS_sistar)
 ```
 
+##train_spul_modGS_sistar
+```{r}
+train_spul_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = train.Spul, method = "REML")
+summary(train_spul_modGS_sistar)
+```
+
+###test_spul_modGS_sistar
+
+```{r}
+test_spul_modGS_sistar <- train_spul_modGS_sistar %>% predict(test.Spul, type = "response")
+summary(test_spul_modGS_sistar)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGS_sistar <- test.Spul$cells_per_litre - test_spul_modGS_sistar
+RMSE_spul_modGS_sistar <- sqrt(mean(error_spul_modGS_sistar^2))
+print(RMSE_spul_modGS_sistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGS_sistar/mean(test.Spul$cells_per_litre)
+```
+
 #Spul_modGS_nistar
 
 ```{r}
 Spul_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, scientific_name, bs = "fs"), data = data.Spul, method = "REML")
 summary(Spul_modGS_nistar)
+```
+
+##train_spul_modGS_nistar
+```{r}
+train_spul_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, scientific_name, bs = "fs"), data = train.Spul, method = "REML")
+summary(train_spul_modGS_nistar)
+```
+
+###test_spul_modGS_nistar
+
+```{r}
+test_spul_modGS_nistar <- train_spul_modGS_nistar %>% predict(test.Spul, type = "response")
+summary(test_spul_modGS_nistar)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGS_nistar <- test.Spul$cells_per_litre - test_spul_modGS_nistar
+RMSE_spul_modGS_nistar <- sqrt(mean(error_spul_modGS_nistar^2))
+print(RMSE_spul_modGS_nistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGS_sistar/mean(test.Spul$cells_per_litre)
 ```
 
 #Spul_modGS_s
@@ -60,11 +167,61 @@ Spul_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp")
 summary(Spul_modGS_s)
 ```
 
+##train_spul_modGS_s
+```{r}
+train_spul_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, scientific_name, bs = "fs"), data = train.Spul, method = "REML")
+summary(train_spul_modGS_s)
+```
+
+###test_spul_modGS_s
+
+```{r}
+test_spul_modGS_s <- train_spul_modGS_s %>% predict(test.Spul, type = "response")
+summary(test_spul_modGS_s)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGS_s <- test.Spul$cells_per_litre - test_spul_modGS_p
+RMSE_spul_modGS_s <- sqrt(mean(error_spul_modGS_p^2))
+print(RMSE_spul_modGS_p)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGS_p/mean(test.Spul$cells_per_litre)
+```
+
 #Spul_modGS_t
 
 ```{r}
 Spul_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = data.Spul, method = "REML")
 summary(Spul_modGS_t)
+```
+
+##train_spul_modGS_t
+```{r}
+train_spul_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = train.Spul, method = "REML")
+summary(train_spul_modGS_t)
+```
+
+###test_spul_modGS_t
+
+```{r}
+test_spul_modGS_t <- train_spul_modGS_t %>% predict(test.Spul, type = "response")
+summary(test_spul_modGS_t)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGS_t <- test.Spul$cells_per_litre - test_spul_modGS_t
+RMSE_spul_modGS_t <- sqrt(mean(error_spul_modGS_t^2))
+print(RMSE_spul_modGS_t)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGS_t/mean(test.Spul$cells_per_litre)
 ```
 
 ##MODEL GI - environmental variables + individual smoother scientific_name
@@ -76,12 +233,61 @@ Spul_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp")
 summary(Spul_modGI_p)
 ```
 
+###train_spul_modGI_p
+```{r}
+train_spul_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, by = scientific_name, bs = "fs", m = 1), data = train.Spul, method = "REML")
+summary(train_spul_modGI_p)
+```
+
+###test_spul_modGI_p
+
+```{r}
+test_spul_modGI_p <- train_spul_modGI_p %>% predict(test.Spul, type = "response")
+summary(test_spul_modGI_p)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGI_p <- test.Spul$cells_per_litre - test_spul_modGI_p
+RMSE_spul_modGI_p <- sqrt(mean(error_spul_modGI_p^2))
+print(RMSE_spul_modGI_p)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGI_p/mean(test.Spul$cells_per_litre)
+```
 
 #Spul_modGI_sistar
 
 ```{r}
 Spul_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by =  scientific_name, bs = "fs", m = 1), data = data.Spul, method = "REML")
 summary(Spul_modGI_sistar)
+```
+
+###train_spul_modGI_sistar
+```{r}
+train_spul_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = train.Spul, method = "REML")
+summary(train_spul_modGI_sistar)
+```
+
+###test_spul_modGI_sistar
+
+```{r}
+test_spul_modGI_sistar <- train_spul_modGI_sistar %>% predict(test.Spul, type = "response")
+summary(test_spul_modGI_sistar)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGI_sistar <- test.Spul$cells_per_litre - test_spul_modGI_sistar
+RMSE_spul_modGI_sistar <- sqrt(mean(error_spul_modGI_sistar^2))
+print(RMSE_spul_modGI_sistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGI_sistar/mean(test.Spul$cells_per_litre)
 ```
 
 #Spul_modGI_nistar
@@ -91,11 +297,61 @@ Spul_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = 
 summary(Spul_modGI_nistar)
 ```
 
+###train_spul_modGI_nistar
+```{r}
+train_spul_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, by = scientific_name, bs = "fs", m = 1), data = train.Spul, method = "REML")
+summary(train_spul_modGI_nistar)
+```
+
+###test_spul_modGI_nistar
+
+```{r}
+test_spul_modGI_nistar <- train_spul_modGI_nistar %>% predict(test.Spul, type = "response")
+summary(test_spul_modGI_nistar)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGI_nistar <- test.Spul$cells_per_litre - test_spul_modGI_nistar
+RMSE_spul_modGI_nistar <- sqrt(mean(error_spul_modGI_nistar^2))
+print(RMSE_spul_modGI_nistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGI_nistar/mean(test.Spul$cells_per_litre)
+```
+
 #Spul_modGI_s
 
 ```{r}
 Spul_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by = scientific_name, bs = "fs", m = 1), data = data.Spul, method = "REML")
 summary(Spul_modGI_s)
+```
+
+###train_spul_modGI_s
+```{r}
+train_spul_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by = scientific_name, bs = "fs", m = 1), data = train.Spul, method = "REML")
+summary(train_spul_modGI_s)
+```
+
+###test_spul_modGI_s
+
+```{r}
+test_spul_modGI_s <- train_spul_modGI_s %>% predict(test.Spul, type = "response")
+summary(test_spul_modGI_s)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGI_s <- test.Spul$cells_per_litre - test_spul_modGI_s
+RMSE_spul_modGI_s <- sqrt(mean(error_spul_modGI_s^2))
+print(RMSE_spul_modGI_s)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGI_s/mean(test.Spul$cells_per_litre)
 ```
 
 #Spul_modGI_t
@@ -104,4 +360,45 @@ summary(Spul_modGI_s)
 Spul_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = data.Spul, method = "REML")
 summary(Spul_modGI_t)
 ```
+
+###train_spul_modGI_t
+```{r}
+train_spul_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = train.Spul, method = "REML")
+summary(train_spul_modGI_t)
+```
+
+###test_spul_modGI_t
+
+```{r}
+test_spul_modGI_t <- train_spul_modGI_t %>% predict(test.Spul, type = "response")
+summary(test_spul_modGI_t)
+```
+
+RMSE of test data: 
+```{r}
+error_spul_modGI_t <- test.Spul$cells_per_litre - test_spul_modGI_t
+RMSE_spul_modGI_t <- sqrt(mean(error_spul_modGI_t^2))
+print(RMSE_spul_modGI_t)
+```
+
+prediction error rate:
+```{r}
+RMSE_spul_modGI_t/mean(test.Spul$cells_per_litre)
+```
+
+#AIC values
+```{r}
+AIC(train_spul_modG, train_spul_modGS_p, train_spul_modGS_sistar, train_spul_modGS_nistar, train_spul_modGS_s, train_spul_modGS_t, train_spul_modGI_p, train_spul_modGI_sistar, train_spul_modGI_nistar, train_spul_modGI_s, train_spul_modGI_t)
+```
+
+
+
+
+
+
+
+
+
+
+
 

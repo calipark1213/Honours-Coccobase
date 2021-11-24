@@ -9,13 +9,18 @@ output:
 
 ```{r}
 load("data_subsets.RData")
+load("data_crossval.RData")
 ```
 
 ```{r}
 library(mgcv)
+library(glmnet)
+library(stats)
+library(caret)
+set.seed(101)
 ```
 
-##MODEL G
+#MODEL G
 
 #full_modG
 
@@ -24,9 +29,33 @@ full_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + 
 summary(full_modG)
 ```
 
+##train_full
+
 ```{r}
-plot(full_modG, rug = T, residuals = T, shade = T, cex = 1, shade.col = "blue")
+train_full_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re")  + te(longitude, latitude, bs = c("cc","tp")) , data = train.full)
+summary(train_full_modG)
 ```
+
+##test_full
+
+```{r}
+test_full_modG <- train_full_modG %>% predict(test.full, type = "response")
+summary(test_full_modG)
+```
+
+RMSE of test data: 
+```{r}
+error_full <- test.full$cells_per_litre - test_full_modG
+RMSE_full <- sqrt(mean(error_full^2))
+print(RMSE_full)
+```
+
+prediction error rate:
+```{r}
+RMSE_full/mean(test.full$cells_per_litre)
+```
+
+
 
 #Coccolithus_modG
 
@@ -35,10 +64,83 @@ Coccolithus_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "
 summary(Coccolithus_modG)
 ```
 
+##train_coccolithus
+
+```{r}
+train_coccolithus_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = train.Coccolithus)
+summary(train_coccolithus_modG)
+```
+
+##test_coccolithus
+
+```{r}
+test_coccolithus_modG <- train_coccolithus_modG %>% predict(test.Coccolithus, type = "response")
+summary(test_coccolithus_modG)
+```
+
+RMSE of test data:
+```{r}
+error_coccolithus <- test.Coccolithus$cells_per_litre - test_coccolithus_modG
+RMSE_coccolithus <- sqrt(mean(error_coccolithus^2))
+print(RMSE_coccolithus)
+```
+
+prediction error rate:
+```{r}
+RMSE_coccolithus/mean(test.Coccolithus$cells_per_litre)
+```
+
 #Syracosphaera_modG
 
 ```{r}
 Syracosphaera_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = data.Syracosphaera)
 summary(Syracosphaera_modG)
 ```
+
+##train_syracosphaera
+
+```{r}
+train_syracosphaera_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = train.Syracosphaera)
+summary(train_syracosphaera_modG)
+```
+
+##test_syracosphaera
+
+```{r}
+test_syracosphaera_modG <- train_syracosphaera_modG %>% predict(test.Syracosphaera, type = "response")
+summary(test_syracosphaera_modG)
+```
+
+RMSE of test data:
+```{r}
+error_syracosphaera <- test.Syracosphaera$cells_per_litre - test_syracosphaera_modG
+RMSE_syracosphaera <- sqrt(mean(error_syracosphaera^2))
+print(RMSE_syracosphaera)
+```
+
+prediction error rate:
+```{r}
+RMSE_syracosphaera/mean(test.Syracosphaera$cells_per_litre)
+```
+
+#AIC values
+```{r}
+AIC(train_full_modG, train_coccolithus_modG, train_syracosphaera_modG)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

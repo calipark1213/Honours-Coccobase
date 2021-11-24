@@ -4,11 +4,36 @@ author: "Seoyeon Park B00768397"
 date: "10/19/2021"
 output: html_document
 ---
- 
-Plot of abundance (original & log transformed):
+
 ```{r}
-hist(data$cells_per_litre)
-hist(log(data$cells_per_litre))
+load("data_subsets.Rdata")
+library(caret)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+```
+
+Original: 
+
+```{r}
+orig <- ggplot(data = data, mapping = aes(exp(cells_per_litre))) + geom_histogram(bins = 20) + theme(axis.title.x = element_blank())
+```
+
+Log transformed: 
+```{r}
+log <- ggplot(data = data, mapping = aes(cells_per_litre)) + geom_histogram(bins = 20) + theme(axis.title.x = element_blank(), axis.title.y = element_blank()) 
+```
+
+
+```{r}
+p1 <- grid.arrange(arrangeGrob(orig, log, nrow = 1), bottom = textGrob("cells per litre"))
+ggsave("abundance_histogram.png", plot = p1)
+```
+
+```{r}
+full_species <- as.data.frame(table(data.full$scientific_name))
+colnames(full_species) <- c("Species names", "Number of observations")
+write.csv(full_species, file = "full species list.csv")
 ```
 
 Plots of each species:
@@ -18,11 +43,13 @@ WorldData <- map_data("world")
 map_colors <- RColorBrewer::brewer.pal(9,"Pastel1")
 ```
 
+
 All coccolithophores:
 
 **may need to fullscreen this plot to see**
 ```{r}
-ggplot(data = data) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + theme(legend.position = "right") + ylim(40,90)  + xlim(-50,0)
+dist<- ggplot(data = data) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + theme(legend.position = "none") + ylim(40,90)  + xlim(-50,0)
+ggsave("species_distribution.png", plot = dist)
 ```
 
 E.hux:
@@ -46,17 +73,55 @@ ggplot(data = data.Cpel) + coord_equal() + geom_point(aes(x = longitude, y = lat
 For distribution of Syracosphaera genus:
 
 ```{r}
-ggplot(data = data.syracosphaera) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + ylim(40,90)  + xlim(-50,0)
+ggplot(data = data.Syracosphaera) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + ylim(40,90)  + xlim(-50,0)
 ```
 
 ```{r}
 ggplot(data = data.Spul) + coord_equal() + geom_point(aes(x = longitude, y = latitude, color = scientific_name)) + geom_map(data = WorldData, map = WorldData, aes(x = long, y = lat, map_id = region), fill = "white", colour = "#7f7f7f", alpha = 0.5, size=0.5) + theme(legend.position = "right") + ylim(40,90)  + xlim(-50,0)
 ```
 
+Full: 
+```{r}
+x = data.full[, c("p_an", "ni_star", "si_star", "n_an", "s_an", "t_an")]
+y = data.full$cells_per_litre
+full <- featurePlot(x = x, y = y, labels = c("Environmental variables", "", "Full data"))
+full
+```
 
+Coccolithus: 
+```{r}
+x = data.Coccolithus[, c("p_an", "ni_star", "si_star", "n_an", "s_an", "t_an")]
+y = data.Coccolithus$cells_per_litre
+featurePlot(x = x, y = y, labels = c("Environmental variables", ""))
+```
 
+Syracosphaera: 
+```{r}
+x = data.Syracosphaera[, c("p_an", "ni_star", "si_star", "n_an", "s_an", "t_an")]
+y = data.Syracosphaera$cells_per_litre
+featurePlot(x = x, y = y, labels = c("Environmental variables", ""))
+```
 
+E. huxleyi: 
+```{r}
+x = data.Ehux[, c("p_an", "ni_star", "si_star", "n_an", "s_an", "t_an")]
+y = data.Ehux$cells_per_litre
+featurePlot(x = x, y = y, labels = c("Environmental variables", ""))
+```
 
+C.pelagicus: 
+```{r}
+x = data.Cpel[, c("p_an", "ni_star", "si_star", "n_an", "s_an", "t_an")]
+y = data.Cpel$cells_per_litre
+featurePlot(x = x, y = y, labels = c("Environmental variables", ""))
+```
+
+S. pulchra: 
+```{r}
+x = data.Spul[, c("p_an", "ni_star", "si_star", "n_an", "s_an", "t_an")]
+y = data.Spul$cells_per_litre
+featurePlot(x = x, y = y, labels = c("Environmental variables", ""))
+```
 
 
 

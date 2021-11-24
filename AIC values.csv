@@ -1,0 +1,20 @@
+﻿Model G,,,,,
+Coccolithophores,-425.7356,,,,
+Coccolithus species,-175.1468,,,,
+Syracosphaera species,-351.1612,,,,
+Emiliania huxleyi,-591.8112,,,,
+Coccolithus pelagicus,-90.6761,,,,
+Syracosphaera pulchra,-81.99956,,,,
+,,,,,
+Model GS,Phosphate,Si*,Ni*,Salinity,Temperature
+Emiliania huxleyi,-570.1955,-569.6316,-571.7761,-571.8502,-569.6313
+Coccolithus pelagicus,-62.04859,-62.0486,-62.04859,-62.0486,-62.0486
+Syracosphaera pulchra,-77.03322,-77.03223,-77.03349,-77.03248,-77.03339
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+Model GI,Phosphate,Si*,Ni*,Salinity,Temperature
+Emiliania huxleyi,-573.8907,-569.8443,-587.358,-571.8458,-570.7039
+Coccolithus pelagicus,-62.04859,-62.04859,-59.23105,-48.44816,-65.22954
+Syracosphaera pulchra,-75.42282,-77.03337,-77.75921,-77.03347,-77.17262

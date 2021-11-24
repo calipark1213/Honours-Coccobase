@@ -13,94 +13,463 @@ Coccolithus pelagicus
 `
 ```{r}
 load("data_subsets.RData")
+load("data_crossval.RData")
 ```
 
 ```{r}
 library(mgcv)
+library(glmnet)
+library(stats)
+library(caret)
+set.seed(101)
 ```
 
 
-##MODEL G
+#MODEL G 
 
-#Cpel_modG
+##Cpel_modG
 
 ```{r}
 Cpel_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc","tp")) , data = data.Cpel)
 summary(Cpel_modG)
 ```
 
-##MODEL GS - environmental variables + group smoother scientific_name
+###train_cpel_modG
 
-#Cpel_modGS_p
+```{r}
+train_cpel_modG <-  gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc","tp")) , data = train.Cpel)
+summary(train_cpel_modG)
+```
+
+```{r}
+plot(train_cpel_modG)
+```
+
+###test_cpel_modG
+
+```{r}
+test_cpel_modG <- train_cpel_modG %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modG)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modG <- test.Cpel$cells_per_litre - test_cpel_modG
+RMSE_cpel_modG <- sqrt(mean(error_cpel_modG^2))
+print(RMSE_cpel_modG)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modG/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modG)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+#MODEL GS - environmental variables + group smoother scientific_name
+
+##Cpel_modGS_p
 
 ```{r}
 Cpel_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, scientific_name, bs = "fs"), data = data.Cpel, method = "REML")
 summary(Cpel_modGS_p)
 ```
 
+###train_cpel_modGS_p
 
-#Cpel_modGS_sistar
+```{r}
+train_cpel_modGS_p <-  gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, scientific_name, bs = "fs"), data = train.Cpel, method = "REML")
+summary(train_cpel_modGS_p)
+```
+
+```{r}
+plot(train_cpel_modGS_p)
+```
+
+###test_cpel_modGS_p
+
+```{r}
+test_cpel_modGS_p <- train_cpel_modGS_p %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGS_p)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGS_p <- test.Cpel$cells_per_litre - test_cpel_modGS_p
+RMSE_cpel_modGS_P <- sqrt(mean(error_cpel_modGS_p^2))
+print(RMSE_cpel_modGS_P)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGS_P/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGS_p)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGS_sistar
 
 ```{r}
 Cpel_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = data.Cpel, method = "REML")
 summary(Cpel_modGS_sistar)
 ```
 
-#Cpel_modGS_nistar
+###train_cpel_modGS_sistar
+
+```{r}
+train_cpel_modGS_sistar <-  gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = train.Cpel, method = "REML")
+summary(train_cpel_modGS_sistar)
+```
+
+```{r}
+plot(train_cpel_modGS_sistar)
+```
+
+###test_cpel_modGS_sistar
+
+```{r}
+test_cpel_modGS_sistar <- train_cpel_modGS_sistar %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGS_sistar)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGS_sistar <- test.Cpel$cells_per_litre - test_cpel_modGS_sistar
+RMSE_cpel_modGS_sistar <- sqrt(mean(error_cpel_modGS_sistar^2))
+print(RMSE_cpel_modGS_sistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGS_sistar/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGS_sistar)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGS_nistar
 
 ```{r}
 Cpel_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, scientific_name, bs = "fs"), data = data.Cpel, method = "REML")
 summary(Cpel_modGS_nistar)
 ```
 
-#Cpel_modGS_s
+
+###train_cpel_modGS_nistar
+
+```{r}
+train_cpel_modGS_nistar <-  gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, scientific_name, bs = "fs"), data = train.Cpel, method = "REML")
+summary(train_cpel_modGS_nistar)
+```
+
+```{r}
+plot(train_cpel_modGS_nistar)
+```
+
+###test_cpel_modGS_nistar
+
+```{r}
+test_cpel_modGS_nistar <- train_cpel_modGS_nistar %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGS_nistar)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGS_nistar <- test.Cpel$cells_per_litre - test_cpel_modGS_nistar
+RMSE_cpel_modGS_nistar <- sqrt(mean(error_cpel_modGS_nistar^2))
+print(RMSE_cpel_modGS_nistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGS_nistar/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGS_nistar)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGS_s
 
 ```{r}
 Cpel_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, scientific_name, bs = "fs"), data = data.Cpel, method = "REML")
 summary(Cpel_modGS_s)
 ```
 
-#Cpel_modGS_t
+###train_cpel_modGS_s
+
+```{r}
+train_cpel_modGS_s <-  gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, scientific_name, bs = "fs"), data = train.Cpel, method = "REML")
+summary(train_cpel_modGS_s)
+```
+
+```{r}
+plot(train_cpel_modGS_s)
+```
+
+###test_cpel_modGS_s
+
+```{r}
+test_cpel_modGS_s <- train_cpel_modGS_s %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGS_s)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGS_s <- test.Cpel$cells_per_litre - test_cpel_modGS_s
+RMSE_cpel_modGS_s <- sqrt(mean(error_cpel_modGS_s^2))
+print(RMSE_cpel_modGS_s)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGS_s/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGS_s)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGS_t
 
 ```{r}
 Cpel_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = data.Cpel, method = "REML")
 summary(Cpel_modGS_t)
 ```
+###train_cpel_modGS_t
 
-##MODEL GI - environmental variables + individual smoother scientific_name
+```{r}
+train_cpel_modGS_t <-  gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = train.Cpel, method = "REML")
+summary(train_cpel_modGS_t)
+```
 
-#Cpel_modGI_p
+```{r}
+plot(train_cpel_modGS_t)
+```
+
+###test_cpel_modGS_t
+
+```{r}
+test_cpel_modGS_t <- train_cpel_modGS_t %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGS_t)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGS_t <- test.Cpel$cells_per_litre - test_cpel_modGS_t
+RMSE_cpel_modGS_t <- sqrt(mean(error_cpel_modGS_t^2))
+print(RMSE_cpel_modGS_t)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGS_t/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGS_t)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+#MODEL GI - environmental variables + individual smoother scientific_name
+
+##Cpel_modGI_p
 
 ```{r}
 Cpel_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, by = scientific_name, bs = "fs", m = 1), data = data.Cpel, method = "REML")
 summary(Cpel_modGI_p)
 ```
 
-#Cpel_modGI_sistar
+###train_cpel_modGI_p
+```{r}
+train_cpel_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(p_an, by = scientific_name, bs = "fs", m = 1), data = train.Cpel, method = "REML")
+summary(train_cpel_modGI_p)
+```
+
+###test_cpel_modGI_p
+
+```{r}
+test_cpel_modGI_p <- train_cpel_modGI_p %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGI_p)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGI_p <- test.Cpel$cells_per_litre - test_cpel_modGI_p
+RMSE_cpel_modGI_p <- sqrt(mean(error_cpel_modGI_p^2))
+print(RMSE_cpel_modGI_p)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGI_p/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGI_p)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGI_sistar
 
 ```{r}
 Cpel_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = data.Cpel, method = "REML")
 summary(Cpel_modGI_sistar)
 ```
 
-#Cpel_modGI_nistar
+###train_cpel_modGI_sistar
+```{r}
+train_cpel_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = train.Cpel, method = "REML")
+summary(train_cpel_modGI_sistar)
+```
+
+###test_cpel_modGI_sistar
+
+```{r}
+test_cpel_modGI_sistar <- train_cpel_modGI_sistar %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGI_sistar)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGI_sistar <- test.Cpel$cells_per_litre - test_cpel_modGI_sistar
+RMSE_cpel_modGI_sistar <- sqrt(mean(error_cpel_modGI_sistar^2))
+print(RMSE_cpel_modGI_sistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGI_sistar/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGI_sistar)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGI_nistar
 
 ```{r}
 Cpel_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, by = scientific_name, bs = "fs", m = 1), data = data.Cpel, method = "REML")
 summary(Cpel_modGI_nistar)
 ```
 
-#Cpel_modGI_s
+###train_cpel_modGI_nistar
+```{r}
+train_cpel_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(ni_star, by = scientific_name, bs = "fs", m = 1), data = train.Cpel, method = "REML")
+summary(train_cpel_modGI_nistar)
+```
+
+###test_cpel_modGI_nistar
+
+```{r}
+test_cpel_modGI_nistar <- train_cpel_modGI_nistar %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGI_nistar)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGI_nistar <- test.Cpel$cells_per_litre - test_cpel_modGI_nistar
+RMSE_cpel_modGI_nistar <- sqrt(mean(error_cpel_modGI_nistar^2))
+print(RMSE_cpel_modGI_nistar)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGI_nistar/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGI_nistar)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGI_s
 
 ```{r}
 Cpel_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by =  scientific_name, bs = "fs", m = 1), data = data.Cpel, method = "REML")
 summary(Cpel_modGI_s)
 ```
 
-#Cpel_modGI_t
+###train_cpel_modGI_s
+```{r}
+train_cpel_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by = scientific_name, bs = "fs", m = 1), data = train.Cpel, method = "REML")
+summary(train_cpel_modGI_s)
+```
+
+###test_cpel_modGI_s
+
+```{r}
+test_cpel_modGI_s <- train_cpel_modGI_s %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGI_s)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGI_s <- test.Cpel$cells_per_litre - test_cpel_modGI_s
+RMSE_cpel_modGI_s <- sqrt(mean(error_cpel_modGI_s^2))
+print(RMSE_cpel_modGI_s)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGI_s/mean(test.Cpel$cells_per_litre)
+```
+
+Actual vs predicted: 
+```{r}
+ggplot(data = test.Cpel, mapping = aes(x = cells_per_litre, y = test_cpel_modGI_s)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1)
+```
+
+##Cpel_modGI_t
 
 ```{r}
 Cpel_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = data.Cpel, method = "REML")
 summary(Cpel_modGI_t)
 ```
+
+###train_cpel_modGI_t
+```{r}
+train_cpel_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = train.Cpel, method = "REML")
+summary(train_cpel_modGI_t)
+```
+
+###test_cpel_modGI_t
+
+```{r}
+test_cpel_modGI_t <- train_cpel_modGI_t %>% predict(test.Cpel, type = "response")
+summary(test_cpel_modGI_t)
+```
+
+RMSE of test data: 
+```{r}
+error_cpel_modGI_t <- test.Cpel$cells_per_litre - test_cpel_modGI_t
+RMSE_cpel_modGI_t <- sqrt(mean(error_cpel_modGI_t^2))
+print(RMSE_cpel_modGI_t)
+```
+
+prediction error rate:
+```{r}
+RMSE_cpel_modGI_t/mean(test.Cpel$cells_per_litre)
+```
+
+#AIC values
+```{r}
+AIC(train_cpel_modG, train_cpel_modGS_p, train_cpel_modGS_sistar, train_cpel_modGS_nistar, train_cpel_modGS_s, train_cpel_modGS_t, train_cpel_modGI_p, train_cpel_modGI_sistar, train_cpel_modGI_nistar, train_cpel_modGI_s, train_cpel_modGI_t)
+```
+
+
+
+
+
+
 
