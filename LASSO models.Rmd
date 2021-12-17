@@ -7,6 +7,11 @@ output: html_document
 
 #LASSO model full
  
+```{r}
+set.seed(101)
+```
+ 
+ 
 Organize data into matrix:
 ```{r}
 y <- data.full$cells_per_litre
@@ -46,6 +51,12 @@ coef(best_model_lasso_full)
 ```
 
 salinity shrunk to 0 
+
+```{r}
+sqrt(mean((y - predict(best_model_lasso_full, newx = x, type = "response"))^2))
+```
+
+
 
 ##test_lasso_full
 
@@ -113,6 +124,10 @@ coef(best_model_lasso_coccolithus)
 
 salinity shrunk to 0
 
+```{r}
+sqrt(mean((y - predict(best_model_lasso_coccolithus, newx = x, type = "response"))^2))
+```
+
 ##test_lasso_coccolithus
 
 ```{r}
@@ -177,6 +192,10 @@ plot(cv_model_train_syracosphaera)
 ```{r}
 best_model_lasso_syracosphaera <- glmnet(x, y, alpha = 1, lambda = best_lambda)
 coef(best_model_lasso_syracosphaera)
+```
+
+```{r}
+sqrt(mean((y - predict(best_model_lasso_syracosphaera, newx = x, type = "response"))^2))
 ```
 
 ##test_lasso_syracosphaera
@@ -246,7 +265,11 @@ best_model_lasso_Ehux <- glmnet(x, y, alpha = 1, lambda = best_lambda)
 coef(best_model_lasso_Ehux)
 ```
 
-salinity shrunk to 0 
+scientific name shrunk to 0 
+
+```{r}
+sqrt(mean((y - predict(best_model_lasso_Ehux, newx = x, type = "response"))^2))
+```
 
 ##test_lasso_Ehux
 
@@ -312,6 +335,11 @@ best_model_lasso_Cpel <- glmnet(x, y, alpha = 1, lambda = best_lambda)
 coef(best_model_lasso_Cpel)
 ```
 
+```{r}
+sqrt(mean((y - predict(best_model_lasso_Cpel, newx = x, type = "response"))^2))
+```
+
+
 ##test_lasso_Cpel
 
 ```{r}
@@ -376,6 +404,10 @@ best_model_lasso_Spul <- glmnet(x, y, alpha = 1, lambda = best_lambda)
 coef(best_model_lasso_Spul)
 ```
 
+```{r}
+sqrt(mean((y - predict(best_model_lasso_Spul, newx = x, type = "response"))^2))
+```
+
 ##test_lasso_Spul
 
 ```{r}
@@ -401,3 +433,19 @@ prediction error rate:
 ```{r}
 RMSE_lasso_Spul/mean(test.full$cells_per_litre)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

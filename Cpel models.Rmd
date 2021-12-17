@@ -42,7 +42,11 @@ summary(train_cpel_modG)
 ```
 
 ```{r}
-plot(train_cpel_modG)
+plot(train_cpel_modG, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modG, type = "response"))^2))
 ```
 
 ###test_cpel_modG
@@ -86,7 +90,11 @@ summary(train_cpel_modGS_p)
 ```
 
 ```{r}
-plot(train_cpel_modGS_p)
+plot(train_cpel_modGS_p, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGS_p, type = "response"))^2))
 ```
 
 ###test_cpel_modGS_p
@@ -128,7 +136,11 @@ summary(train_cpel_modGS_sistar)
 ```
 
 ```{r}
-plot(train_cpel_modGS_sistar)
+plot(train_cpel_modGS_sistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGS_sistar, type = "response"))^2))
 ```
 
 ###test_cpel_modGS_sistar
@@ -171,7 +183,11 @@ summary(train_cpel_modGS_nistar)
 ```
 
 ```{r}
-plot(train_cpel_modGS_nistar)
+plot(train_cpel_modGS_nistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGS_nistar, type = "response"))^2))
 ```
 
 ###test_cpel_modGS_nistar
@@ -213,7 +229,11 @@ summary(train_cpel_modGS_s)
 ```
 
 ```{r}
-plot(train_cpel_modGS_s)
+plot(train_cpel_modGS_s, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGS_s, type = "response"))^2))
 ```
 
 ###test_cpel_modGS_s
@@ -254,7 +274,11 @@ summary(train_cpel_modGS_t)
 ```
 
 ```{r}
-plot(train_cpel_modGS_t)
+plot(train_cpel_modGS_t, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGS_t, type = "response"))^2))
 ```
 
 ###test_cpel_modGS_t
@@ -295,6 +319,16 @@ train_cpel_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs =
 summary(train_cpel_modGI_p)
 ```
 
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGI_p, type = "response"))^2))
+```
+
+```{r}
+plot(train_cpel_modGI_p, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+
+
 ###test_cpel_modGI_p
 
 ```{r}
@@ -330,6 +364,14 @@ summary(Cpel_modGI_sistar)
 ```{r}
 train_cpel_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = train.Cpel, method = "REML")
 summary(train_cpel_modGI_sistar)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGI_sistar, type = "response"))^2))
+```
+
+```{r}
+plot(train_cpel_modGI_sistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ###test_cpel_modGI_sistar
@@ -369,6 +411,14 @@ train_cpel_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star,
 summary(train_cpel_modGI_nistar)
 ```
 
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGI_nistar, type = "response"))^2))
+```
+
+```{r}
+plot(train_cpel_modGI_nistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
 ###test_cpel_modGI_nistar
 
 ```{r}
@@ -406,6 +456,14 @@ train_cpel_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs =
 summary(train_cpel_modGI_s)
 ```
 
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGI_s, type = "response"))^2))
+```
+
+```{r}
+plot(train_cpel_modGI_s, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
 ###test_cpel_modGI_s
 
 ```{r}
@@ -441,6 +499,14 @@ summary(Cpel_modGI_t)
 ```{r}
 train_cpel_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, by = scientific_name, bs = "fs", m = 1), data = train.Cpel, method = "REML")
 summary(train_cpel_modGI_t)
+```
+
+```{r}
+sqrt(mean((train.Cpel$cells_per_litre - predict(train_cpel_modGI_t, type = "response"))^2))
+```
+
+```{r}
+plot(train_cpel_modGI_t, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ###test_cpel_modGI_t

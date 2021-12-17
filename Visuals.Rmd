@@ -123,10 +123,25 @@ y = data.Spul$cells_per_litre
 featurePlot(x = x, y = y, labels = c("Environmental variables", ""))
 ```
 
+Best models actual vs predicted: 
+All E.hux data
 
+ModGS_s
+```{r}
+one <- ggplot(data = test.Ehux, mapping = aes(x = cells_per_litre, y = test_ehux_modGS_s)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1) + labs(x = "Actual", y = "Predicted")
+ggsave("Actual vs Predicted, model GS_s.png", plot = one)
+```
 
+ModGI_nistar
+```{r}
+two <- ggplot(data = test.Ehux, mapping = aes(x = cells_per_litre, y = test_ehux_modGI_nistar)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1) + labs(x = "Actual", y = "Predicted")
+ggsave("Actual vs Predicted, model GI_nistar.png", plot = two)
+```
 
-
+```{r}
+three <- ggplot(data = test.Ehux, mapping = aes(x = cells_per_litre, y = test_lasso_Ehux)) + geom_point() + geom_abline(intercept = 0, slope = 1, color = "red", size = 1) + labs(x = "Actual", y = "Predicted")
+ggsave("Actual vs Predicted, LASSO.png", plot = three)
+```
 
 
 

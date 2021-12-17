@@ -16,7 +16,10 @@ load("data_crossval.RData")
 library(mgcv)
 library(glmnet)
 library(stats)
+library(dplyr)
+library(visreg)
 library(caret)
+library(Hmisc)
 set.seed(101)
 ```
 
@@ -34,6 +37,14 @@ summary(full_modG)
 ```{r}
 train_full_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re")  + te(longitude, latitude, bs = c("cc","tp")) , data = train.full)
 summary(train_full_modG)
+```
+
+```{r}
+sqrt(mean((train.full$cells_per_litre - predict(train_full_modG, type = "response"))^2))
+```
+
+```{r}
+plot(train_full_modG, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ##test_full
@@ -57,6 +68,7 @@ RMSE_full/mean(test.full$cells_per_litre)
 
 
 
+
 #Coccolithus_modG
 
 ```{r}
@@ -69,6 +81,15 @@ summary(Coccolithus_modG)
 ```{r}
 train_coccolithus_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = train.Coccolithus)
 summary(train_coccolithus_modG)
+```
+
+```{r}
+sqrt(mean((train.Coccolithus$cells_per_litre - predict(train_coccolithus_modG, type = "response"))^2))
+```
+
+
+```{r}
+plot(train_coccolithus_modG, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ##test_coccolithus
@@ -102,6 +123,14 @@ summary(Syracosphaera_modG)
 ```{r}
 train_syracosphaera_modG <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + s(scientific_name, bs = "re") + te(longitude, latitude, bs = c("cc","tp")) , data = train.Syracosphaera)
 summary(train_syracosphaera_modG)
+```
+
+```{r}
+sqrt(mean((train.Syracosphaera$cells_per_litre - predict(train_syracosphaera_modG, type = "response"))^2))
+```
+
+```{r}
+plot(train_syracosphaera_modG, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ##test_syracosphaera

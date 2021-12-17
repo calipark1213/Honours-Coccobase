@@ -39,7 +39,12 @@ summary(train_ehux_modG)
 ```
 
 ```{r}
-plot(train_ehux_modG)
+plot(train_ehux_modG, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modG, type = "response"))^2))
 ```
 
 ##test_ehux_modG
@@ -76,6 +81,15 @@ train_ehux_modGS_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs =
 summary(train_ehux_modGS_p)
 ```
 
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGS_p, type = "response"))^2))
+```
+
+```{r}
+plot(train_ehux_modGS_p, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
+
 ##test_ehux_modGS_p
 
 ```{r}
@@ -106,6 +120,15 @@ summary(Ehux_modGS_sistar)
 ```{r}
 train_ehux_modGS_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, scientific_name, bs = "fs"), data = train.Ehux, method = "REML")
 summary(train_ehux_modGS_sistar)
+```
+
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGS_sistar, type = "response"))^2))
+```
+
+
+```{r}
+plot(train_ehux_modGS_sistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ##test_ehux_modGS_sistar
@@ -140,6 +163,15 @@ train_ehux_modGS_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star,
 summary(train_ehux_modGS_nistar)
 ```
 
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGS_nistar, type = "response"))^2))
+```
+
+
+```{r}
+plot(train_ehux_modGS_sistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
 ##test_ehux_modGS_nistar
 
 ```{r}
@@ -172,6 +204,15 @@ train_ehux_modGS_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs =
 summary(train_ehux_modGS_s)
 ```
 
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGS_s, type = "response"))^2))
+```
+
+
+```{r}
+plot(train_ehux_modGS_s, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
 ##test_ehux_modGS_s
 
 ```{r}
@@ -202,6 +243,15 @@ summary(Ehux_modGS_t)
 ```{r}
 train_ehux_modGS_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(t_an, scientific_name, bs = "fs"), data = train.Ehux, method = "REML")
 summary(train_ehux_modGS_t)
+```
+
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGS_t, type = "response"))^2))
+```
+
+
+```{r}
+plot(train_ehux_modGS_t, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ##test_ehux_modGS_t
@@ -238,6 +288,15 @@ train_ehux_modGI_p <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs =
 summary(train_ehux_modGI_p)
 ```
 
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGI_p, type = "response"))^2))
+```
+
+
+```{r}
+plot(train_ehux_modGI_p, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
 ##test_ehux_modGI_p
 
 ```{r}
@@ -268,6 +327,14 @@ summary(Ehux_modGS_sistar)
 ```{r}
 train_ehux_modGI_sistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(si_star, by = scientific_name, bs = "fs", m = 1), data = train.Ehux, method = "REML")
 summary(train_ehux_modGI_sistar)
+```
+
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGI_sistar, type = "response"))^2))
+```
+
+```{r}
+plot(train_ehux_modGI_sistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ##test_ehux_modGI_sistar
@@ -302,6 +369,14 @@ train_ehux_modGI_nistar <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star,
 summary(train_ehux_modGI_nistar)
 ```
 
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGI_nistar, type = "response"))^2))
+```
+
+```{r}
+plot(train_ehux_modGI_nistar, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
 ##test_ehux_modGI_nistar
 
 ```{r}
@@ -332,6 +407,14 @@ summary(Ehux_modGI_s)
 ```{r}
 train_ehux_modGI_s <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs = "tp") + s(ni_star, bs = "tp") + s(s_an, bs = "tp") + s(t_an, bs = "tp") + te(longitude, latitude, bs = c("cc", "tp")) + s(s_an, by = scientific_name, bs = "fs", m = 1), data = train.Ehux, method = "REML")
 summary(train_ehux_modGI_s)
+```
+
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGI_s, type = "response"))^2))
+```
+
+```{r}
+plot(train_ehux_modGI_s, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
 ```
 
 ##test_ehux_modGI_s
@@ -367,6 +450,14 @@ train_ehux_modGI_t <- gam(cells_per_litre ~ s(p_an, bs = "tp") + s(si_star, bs =
 summary(train_ehux_modGI_t)
 ```
 
+```{r}
+sqrt(mean((train.Ehux$cells_per_litre - predict(train_ehux_modGI_t, type = "response"))^2))
+```
+
+```{r}
+plot(train_ehux_modGI_t, shade = TRUE, pages = 1, scale = 0, seWithMean = TRUE)
+```
+
 ##test_ehux_modGI_t
 
 ```{r}
@@ -391,14 +482,6 @@ RMSE_ehux_modGI_t/mean(test.Ehux$cells_per_litre)
 ```{r}
 AIC(train_ehux_modG, train_ehux_modGS_p, train_ehux_modGS_sistar, train_ehux_modGS_nistar, train_ehux_modGS_s, train_ehux_modGS_t, train_ehux_modGI_p, train_ehux_modGI_sistar, train_ehux_modGI_nistar, train_ehux_modGI_s, train_ehux_modGI_t)
 ```
-
-
-
-
-
-
-
-
 
 
 
