@@ -8,6 +8,12 @@ output: html_document
 #LASSO model full
  
 ```{r}
+load("data_subsets.RData")
+load("data_crossval.RData")
+library(mgcv)
+library(glmnet)
+library(stats)
+library(caret)
 set.seed(101)
 ```
  
@@ -433,8 +439,6 @@ prediction error rate:
 ```{r}
 RMSE_lasso_Spul/mean(test.full$cells_per_litre)
 ```
-
-
 
 
 
