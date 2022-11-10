@@ -16,12 +16,12 @@ library(gridExtra)
 Original: 
 
 ```{r}
-orig <- ggplot(data = data.full, mapping = aes(exp(cells_per_litre))) + geom_histogram(bins = 20) + theme(axis.title.x = element_blank())
+orig <- ggplot(data = data.full, mapping = aes(exp(cells_per_litre))) + geom_histogram(bins = 20) + xlab("cells per litre")
 ```
 
 Log transformed: 
 ```{r}
-log <- ggplot(data = data.full, mapping = aes(cells_per_litre)) + geom_histogram(bins = 20) + theme(axis.title.x = element_blank(), axis.title.y = element_blank()) 
+log <- ggplot(data = data.full, mapping = aes(cells_per_litre)) + geom_histogram(bins = 20) + xlab("log cells per litre") 
 ```
 
 ```{r}
@@ -32,7 +32,7 @@ log
 
 
 ```{r}
-p1 <- grid.arrange(arrangeGrob(orig, log, nrow = 1), bottom = textGrob("cells per litre"))
+p1 <- grid.arrange(arrangeGrob(orig, log, nrow = 1))
 ggsave("abundance_histogram.png", plot = p1)
 ```
 
